@@ -8,22 +8,23 @@ tokenizer = AutoTokenizer.from_pretrained("ai-forever/mGPT-1.3B-mongol")
 
 model = AutoModelForQuestionAnswering.from_pretrained("ai-forever/mGPT-1.3B-mongol")
 
-data = load_dataset("json",field="data", data_files= "../annotation/answers.json")
+data = load_dataset("json",field="data", data_files= "./data.json")
 
-# print(data["train"][0])
+
 contexts = []
 trainquestion = []
 trainanswers  = []
 
 for group in data["train"]:
-    for passage in group["paragraphs"]:
-        context = passage["context"]
+    for passage in group["paragraphs"]:     
         for qa in passage["qas"]:
             question = qa["question"]
+            context = qa["context"]
             for anser in qa["answers"]:
                 contexts.append(context)
                 trainanswers.append(anser)
                 trainquestion.append(question)
+
 
 train_encodings = tokenizer(contexts, trainquestion, truncation=True, padding=True)
 
